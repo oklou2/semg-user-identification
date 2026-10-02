@@ -52,7 +52,10 @@
 
 ### 실행 방법
 
-본 프로젝트는 Google Colab 환경에서 실행하였다.
+- Google Colab
+- GPU 사용
+- Random Seed: 42
+- Python / PyTorch 기반
 
 `palm_semg_user_identification.ipynb` 파일을 Colab에서 열고 위에서부터 순서대로 실행한다.
 
@@ -76,7 +79,6 @@
 | 파일 | 설명 |
 |---|---|
 | `palm_semg_user_identification.ipynb` | 데이터 전처리, 모델 학습 및 평가 전체 코드 |
-| `results_summary.json` | 모델별 최종 실험 결과 |
 | `results/confusion_2dcnn.png` | 2D CNN Confusion Matrix |
 | `results/confusion_resnet18.png` | ResNet18 Confusion Matrix |
 | `results/confusion_densenet.png` | DenseNet161 Confusion Matrix |
@@ -113,8 +115,9 @@ ResNet18의 Accuracy는 87.79%, DenseNet161은 87.44%로 두 모델의 성능 �
 - 가장 많이 오분류된 클래스: **E**
 - 주요 오분류 유형: **E → B (87개)**
 - 오분류가 발생한 이유에 대한 분석:
-  - 2D CNN은 비교적 단순한 구조이기 때문에 사용자별 sEMG의 복잡한 시간-주파수 특징을 충분히 구분하지 못한 것으로 볼 수 있다.
-  - 특히 E 클래스가 B 클래스로 많이 분류되는 경향을 보였다.
+  - B → E 오분류 24건은 총 10개의 B trial에 분산되어 있었으며, 특정 trial 하나에만 집중된 오류는 아니었다.
+  - 동작 구간별로는 Rotation 구간에서 16건(66.7%)이 발생하여, 회전 과정에서 B와 E의 sEMG 특징이 상대적으로 유사하게 나타났을 가능성이 있다.
+  - 오분류된 window에서 E 클래스의 평균 예측 확률은 약 0.760으로 나타나, 모델이 E로 비교적 강하게 판단한 경우가 많았다.
 
 ---
 
